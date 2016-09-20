@@ -1,57 +1,73 @@
-// 'use strict';
-// const jwt    = require('jwt-simple');
-// // const secret = require('../../config/secret');
-//
-// module.exports = {
-//
-//   // SIGN UP / REGISTER //
-//   register: (req, res) => {
-//
-//     models.User.findOne({
-//       where: {
-//         'email': req.body.email
-//       }
-//     }).then(user => {
-//       if (user) {
-//         return res.status(400).json({message: 'E-mail already in use'});
-//       } else {
-//
-//         let newUser = {
-//           firstName: req.body.firstName,
-//           lastName: req.body.lastName,
-//           email: req.body.email,
-//           password: models.User.generateHash(req.body.password)
-//         };
-//
-//         models.User.create(newUser).then(user => {
-//           let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || 'test');
-//           return res.status(200).json({user: user, message: 'Registration Success', token: token});
-//         })
-//       }
-//     }).catch(err => {
-//       return res.status(500).send(err);
-//     })
-//   },
-//
-//   // LOG IN //
-//   login: (req, res) => {
-//
-//     models.User.findOne({
-//       where: {
-//         'email': req.body.email
-//       }
-//     }).then(user => {
-//       if (!user) {
-//         return res.status(400).json({message: 'Invalid login'});
-//       } else if (!user.validPassword(req.body.password)) {
-//         return res.status(400).json({message: 'Invalid password'});
-//       } else {
-//         let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || 'test');
-//         return res.status(200).json({user: user, message: 'Login Success', token: token})
-//       }
-//     }).catch(err => {
-//       console.log('err', err);
-//       return res.status(500).send(err);
-//     })
-//   }
-// };
+'use strict';
+
+const User = require('../user/user.server.model');
+const jwt  = require('jwt-simple');
+// const secret = require('../../config/secret');
+
+module.exports = {
+
+  // SIGN UP / REGISTER //
+  register: (req, res) => {
+
+    User.findOne({'email': req.body.email}, (err, user) => {
+      if (err) {
+        console.log('err: ', err);
+        res.status(400).json(err);
+      }
+
+      if (user) {
+        res.status(400).json({message: 'E-mail already in use'});
+      } else {
+
+        let newUser = new User();
+
+        newUser.firstname = req.body.firstName;
+        newUser.lastName  = req.body.lastName;
+        newUser.email     = req.body.email;
+        newUser.password  = newUser.generateHash(req.body.password);
+
+        console.log('newUser:::::: ', newUser);
+
+        newUser.save((err, newUser) => {
+          console.log('newUser', newUser);
+          if (err){
+            return err;
+          };
+            return res.status(200).json(newUser);
+        });
+          // .then(newUser => {
+          //   console.log('newUser ====>', newUser);
+          //
+          //   let token = jwt.encode({userId: newUser._id, email: newUser.email}, process.env.JWT_SECRET || 'test');
+          //
+          //   res.status(200).json({user: newUser, message: 'Login Success', token: token});
+          // })
+          // .catch(err => {
+          //   res.status(500).json({err: err, message: 'Login Failed'});
+          // });
+      }
+    });
+  },
+
+  // LOG IN //
+  // login: (req, res) => {
+  //
+  //   models.User.findOne({
+  //     where: {
+  //       'email': req.body.email
+  //     }
+  //   }).then(user => {
+  //     if (!user) {
+  //       return res.status(400).json({message: 'Invalid login'});
+  //     } else if (!user.validPassword(req.body.password)) {
+  //       return res.status(400).json({message: 'Invalid password'});
+  //     } else {
+  //       let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || 'test');
+  //       return res.status(200).json({user: user, message: 'Login Success', token: token})
+  //     }
+  //   }).catch(err => {
+  //     console.log('err', err);
+  //     return res.status(500).send(err);
+  //   })
+  // }
+};

@@ -12,7 +12,7 @@ const app = express();
 
 // // // ROUTES // // //
 // AUTH ROUTES //
-// require('./server/features/auth/auth.routes')(app);
+require('./server/features/auth/auth.routes')(app);
 // USER ROUTES //
 // require('./server/features/user/user.server.routes')(app);
 // ADDRESS ROUTES //
