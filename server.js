@@ -3,18 +3,20 @@
 // APP //
 const babel       = require('babel-core').transform('code');
 const express     = require('./server/config/express.js');
-const environment = process.env.NODE_ENV;
+
+// DB CONFIG//
+require('./server/config/db')();
 
 // RUN EXPRESS //
 const app = express();
 
 // // // ROUTES // // //
 // AUTH ROUTES //
-require('./server/features/auth/auth.routes')(app);
+// require('./server/features/auth/auth.routes')(app);
 // USER ROUTES //
-require('./server/features/user/user.server.routes')(app);
+// require('./server/features/user/user.server.routes')(app);
 // ADDRESS ROUTES //
-require('./server/features/address/address.server.routes')(app);
+// require('./server/features/address/address.server.routes')(app);
 
 // TEST ROUTE //
 app.get('/api/v1/test', (req, res) => {
