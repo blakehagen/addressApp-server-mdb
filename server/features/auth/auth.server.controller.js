@@ -11,7 +11,6 @@ module.exports = {
 
     User.findOne({'email': req.body.email}, (err, user) => {
       if (err) {
-        console.log('err: ', err);
         res.status(400).json(err);
       }
 
@@ -26,48 +25,36 @@ module.exports = {
         newUser.email     = req.body.email;
         newUser.password  = newUser.generateHash(req.body.password);
 
-        console.log('newUser:::::: ', newUser);
-
         newUser.save((err, newUser) => {
           console.log('newUser', newUser);
-          if (err){
+          if (err) {
             return err;
-          };
-            return res.status(200).json(newUser);
+          }
+
+          let token = jwt.encode({userId: newUser._id, email: newUser.email}, process.env.JWT_SECRET || 'test');
+
+          return res.status(200).json({user: newUser, message: 'Login Success', token: token});
         });
-          // .then(newUser => {
-          //   console.log('newUser ====>', newUser);
-          //
-          //   let token = jwt.encode({userId: newUser._id, email: newUser.email}, process.env.JWT_SECRET || 'test');
-          //
-          //   res.status(200).json({user: newUser, message: 'Login Success', token: token});
-          // })
-          // .catch(err => {
-          //   res.status(500).json({err: err, message: 'Login Failed'});
-          // });
       }
     });
   },
 
   // LOG IN //
-  // login: (req, res) => {
-  //
-  //   models.User.findOne({
-  //     where: {
-  //       'email': req.body.email
-  //     }
-  //   }).then(user => {
-  //     if (!user) {
-  //       return res.status(400).json({message: 'Invalid login'});
-  //     } else if (!user.validPassword(req.body.password)) {
-  //       return res.status(400).json({message: 'Invalid password'});
-  //     } else {
-  //       let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || 'test');
-  //       return res.status(200).json({user: user, message: 'Login Success', token: token})
-  //     }
-  //   }).catch(err => {
-  //     console.log('err', err);
-  //     return res.status(500).send(err);
-  //   })
-  // }
+  login: (req, res) => {
+
+    User.findOne({'email': req.body.email}, (err, user) => {
+      if (err) {
+        return res.status(500).json(err);
+      } else if (!user) {
+        return res.status(400).json({message: 'Invalid login'});
+      } else if (!user.validPassword(req.body.password, user.password)) {
+        return res.status(400).json({message: 'Invalid password'});
+      } else {
+
+        let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || 'test');
+
+        return res.status(200).json({user: user, message: 'Login Success', token: token})
+      }
+    });
+  }
 };
