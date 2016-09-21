@@ -11,16 +11,16 @@ module.exports = {
 
     User.findOne({'email': req.body.email}, (err, user) => {
       if (err) {
-        res.status(400).json(err);
+        return res.status(400).json(err);
       }
 
       if (user) {
-        res.status(400).json({message: 'E-mail already in use'});
+       return res.status(400).json({message: 'E-mail already in use'});
       } else {
 
         let newUser = new User();
 
-        newUser.firstname = req.body.firstName;
+        newUser.firstName = req.body.firstName;
         newUser.lastName  = req.body.lastName;
         newUser.email     = req.body.email;
         newUser.password  = newUser.generateHash(req.body.password);

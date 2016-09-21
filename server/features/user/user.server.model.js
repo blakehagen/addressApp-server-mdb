@@ -8,8 +8,8 @@ const Schema   = mongoose.Schema;
 const UserSchema = new Schema({
   userCreated: {type: Date, default: new Date()},
   userCreated_readable: {type: String, default: moment().format('LLL')},
-  firstName: {type: String, required: true},
-  lastName: {type: String, required: true},
+  firstName: {type: String},
+  lastName: {type: String},
   email: {type: String, required: true},
   password: {type: String, required: true},
 });
