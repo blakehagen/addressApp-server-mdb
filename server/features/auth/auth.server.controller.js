@@ -33,7 +33,7 @@ module.exports = {
 
           let token = jwt.encode({userId: newUser._id, email: newUser.email}, process.env.JWT_SECRET || 'test');
 
-          return res.status(200).json({user: newUser, message: 'Login Success', token: token});
+          return res.status(200).json({user: newUser, message: 'Registration Success', token: token});
         });
       }
     });
