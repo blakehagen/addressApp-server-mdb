@@ -14,7 +14,7 @@ const app = express();
 require('./server/features/auth/auth.routes')(app);
 
 // USER ROUTES //
-// require('./server/features/user/user.server.routes')(app);
+require('./server/features/user/user.server.routes')(app);
 
 // ADDRESS ROUTES //
 // require('./server/features/address/address.server.routes')(app);
