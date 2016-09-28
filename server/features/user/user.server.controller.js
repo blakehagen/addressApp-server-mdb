@@ -8,7 +8,7 @@ module.exports = {
   getUser: (req, res) => {
 
     if (!req.headers.authorization) {
-      res.status(401).send('Unauthorized');
+      return res.status(401).send('Unauthorized');
     }
 
 
