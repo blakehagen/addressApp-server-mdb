@@ -14,9 +14,9 @@ module.exports = {
 
     User.findById(req.params.id).select('firstName lastName email').exec((error, user) => {
       if (error) {
-        res.status(500).json(error);
+        return res.status(500).json(error);
       }
-      res.status(200).json(user);
+      return res.status(200).json(user);
     })
   }
 
