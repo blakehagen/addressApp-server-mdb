@@ -7,11 +7,11 @@ module.exports = {
   // GET ONE USER BY ID //
   getUser: (req, res) => {
 
-    console.log('req.body========> ', req.body);
+    console.log('req.params ========> ', req.params);
     console.log('req.headers.authorization', req.headers.authorization);
 
     if (!req.headers.authorization) {
-      res.status(401).json('Unauthorized');
+      res.status(401).json({message: 'Unauthorized'});
     }
 
 
