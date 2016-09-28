@@ -6,6 +6,15 @@ module.exports = {
 
   // GET ONE USER BY ID //
   getUser: (req, res) => {
+
+    console.log('req.body========> ', req.body);
+    console.log('req.headers.authorization', req.headers.authorization);
+
+    if (!req.headers.authorization) {
+      res.status(401).json('Unauthorized');
+    }
+
+
     User.findById(req.params.id).select('firstName lastName email').exec((error, user) => {
       if (error) {
         res.status(500).json(error);
