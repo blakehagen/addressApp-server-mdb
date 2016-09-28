@@ -10,9 +10,9 @@ module.exports = {
     console.log('req.params ========> ', req.params);
     console.log('req.headers.authorization', req.headers.authorization);
 
-    // if (!req.headers.authorization) {
-    //   res.status(401).json({message: 'Unauthorized'});
-    // }
+    if (!req.headers.authorization) {
+      res.status(401).json({message: 'Unauthorized'});
+    }
 
 
     User.findById(req.params.id).select('firstName lastName email').exec((error, user) => {
