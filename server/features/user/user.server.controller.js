@@ -18,6 +18,19 @@ module.exports = {
       }
       return res.status(200).json(user);
     })
+  },
+
+  // UPDATE USER ADDRESS //
+  updateUserAddress: (req, res) => {
+    console.log('req.body :::::::>', req.body);
+    User.findByIdAndUpdate(req.params.id, {$set: {'address': req.body}}, {new: true}, (err) => {
+      if (err) {
+        return res.status(500).send(err);
+      }
+      else {
+        return res.status(200).send('Update Success!');
+      }
+    })
   }
 
 };
