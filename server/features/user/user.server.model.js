@@ -12,6 +12,14 @@ const UserSchema = new Schema({
   lastName: {type: String},
   email: {type: String, required: true},
   password: {type: String, required: true},
+  address: {
+    address1: {type: String, default: null},
+    address2: {type: String, default: null},
+    city: {type: String, default: null},
+    state: {type: String, default: null},
+    postal_code: {type: String, default: null},
+    country: {type: String, default: null}
+  }
 });
 
 // CHECK IF PASSWORD VALID //

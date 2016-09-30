@@ -12,7 +12,7 @@ module.exports = {
       return res.status(401).send('Unauthorized');
     }
 
-    User.findById(req.params.id).select('firstName lastName email').exec((error, user) => {
+    User.findById(req.params.id).select('firstName lastName email address').exec((error, user) => {
       if (error) {
         return res.status(500).json(error);
       }
