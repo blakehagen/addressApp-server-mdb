@@ -22,7 +22,11 @@ module.exports = {
 
   // UPDATE USER ADDRESS //
   updateUserAddress: (req, res) => {
-    console.log('req.body :::::::>', req.body);
+    // TODO add middleware to check for verified user via authToken //
+    if (!req.headers.authorization) {
+      return res.status(401).send('Unauthorized');
+    }
+
     User.findByIdAndUpdate(req.params.id, {$set: {'address': req.body}}, {new: true}, (err) => {
       if (err) {
         return res.status(500).send(err);
