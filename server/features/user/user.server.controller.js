@@ -20,6 +20,17 @@ module.exports = {
     })
   },
 
+  // GET ALL USERS FOR SEARCH
+  getAllUsers: function (req, res) {
+    // TODO add middleware to check for verified user via authToken //
+    User.find().select('firstName lastName').exec(function (err, users) {
+      if (err) {
+        return res.status(500);
+      }
+      return res.status(200).json(users)
+    })
+  },
+
   // UPDATE USER ADDRESS //
   updateUserAddress: (req, res) => {
     // TODO add middleware to check for verified user via authToken //
@@ -31,9 +42,7 @@ module.exports = {
       if (err) {
         return res.status(500).send(err);
       }
-      else {
-        return res.status(200).send('Update Success!');
-      }
+      return res.status(200).send('Update Success!');
     })
   }
 
