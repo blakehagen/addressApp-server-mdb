@@ -19,7 +19,10 @@ const UserSchema = new Schema({
     state: {type: String, default: null},
     postal_code: {type: String, default: null},
     country: {type: String, default: null}
-  }
+  },
+  pendingInvitationsSent: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  pendingInvitationsReceived: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  connections: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 });
 
 // CHECK IF PASSWORD VALID //
