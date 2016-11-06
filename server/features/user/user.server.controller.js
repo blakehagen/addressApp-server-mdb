@@ -23,7 +23,7 @@ module.exports = {
   // GET ALL USERS FOR SEARCH
   getAllUsers: function (req, res) {
     // TODO add middleware to check for verified user via authToken //
-    User.find().select('firstName lastName').exec(function (err, users) {
+    User.find().select('firstName lastName pendingInvitationsSent pendingInvitationsReceived connections').exec(function (err, users) {
       if (err) {
         return res.status(500);
       }
@@ -78,7 +78,7 @@ module.exports = {
       });
     });
 
-    // SEND BACK USER THAT SENT INVITES //
+    // SEND BACK UPDATED USER THAT SENT INVITES //
     User.findById(req.params.id).exec((error, user) => {
       if (error) {
         return res.status(500).json(error);

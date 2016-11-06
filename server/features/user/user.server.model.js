@@ -21,8 +21,8 @@ const UserSchema = new Schema({
     country: {type: String, default: null}
   },
   pendingInvitationsSent: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  pendingInvitationsReceived: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  connections: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  pendingInvitationsReceived: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }],
+  connections: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }]
 });
 
 // CHECK IF PASSWORD VALID //
