@@ -1,10 +1,11 @@
 'use strict';
 const userCtrl = require('./user.server.controller');
 
-module.exports = (app) => {
+module.exports = app => {
 
   app.route('/api/v1/user/:id')
-    .get(userCtrl.getUser);
+    .get(userCtrl.getUser)
+    .put(userCtrl.sendInvitations);
 
   app.route('/api/v1/users')
     .get(userCtrl.getAllUsers);
