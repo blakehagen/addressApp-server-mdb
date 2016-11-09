@@ -53,7 +53,7 @@ module.exports = {
     //   return res.status(401).send('Unauthorized');
     // }
 
-    let senderId = req.params.id;
+    let senderId    = req.params.id;
     let invitations = req.body;
 
     // SAVE INVITATIONS TO SENDER //
@@ -62,7 +62,7 @@ module.exports = {
         $push: {'pendingInvitationsSent': invite}
       }, (err) => {
         if (err) {
-         return res.status(500).send(err);
+          return res.status(500).send(err);
         }
       });
     });
@@ -85,6 +85,22 @@ module.exports = {
       }
       return res.status(200).json(user);
     });
+  },
+
+  // GET ALL CONNECTIONS AND PENDING CONNECTIONS FOR 1 USER //
+  getUserConnections: (req, res) => {
+
+    // TODO add middleware to check for verified user via authToken //
+    // if (!req.headers.authorization) {
+    //   return res.status(401).send('Unauthorized');
+    // }
+
+    User.findById(req.params.id).select('pendingInvitationsSent pendingInvitationsReceived connections').populate('pendingInvitationsSent', 'firstName lastName email').populate('pendingInvitationsReceived', 'firstName lastName email').populate('connections', 'firstName lastName email').exec((error, user) => {
+      if (error) {
+        return res.status(500).json(error);
+      }
+      return res.status(200).json(user);
+    })
   }
 
 
