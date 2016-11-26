@@ -101,6 +101,48 @@ module.exports = {
       }
       return res.status(200).json(user);
     })
+  },
+
+  saveNewConnections(req, res){
+    // TODO add middleware to check for verified user via authToken //
+    // if (!req.headers.authorization) {
+    //   return res.status(401).send('Unauthorized');
+    // }
+
+    let userId    = req.params.id;
+    let newConnections = req.body;
+
+    // SAVE NEW CONNECTIONS TO USER AND REMOVE FROM PENDING //
+    _.each(newConnections, connectionId => {
+      User.findByIdAndUpdate(userId, {
+        $push: {'connections': connectionId},
+        $pull: {'pendingInvitationsReceived': connectionId}
+      }, (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+      });
+    });
+
+    // SAVE NEW CONNECTIONS TO EACH CONNECTION AND REMOVE PENDING //
+    _.each(newConnections, connectionId => {
+      User.findByIdAndUpdate(connectionId, {
+        $push: {'connections': userId},
+        $pull: {'pendingInvitationsSent': userId}
+      }, (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+      });
+    });
+
+    // SEND BACK UPDATED USER THAT ACCEPTED INVITES //
+    User.findById(userId).exec((error, user) => {
+      if (error) {
+        return res.status(500).json(error);
+      }
+      return res.status(200).json(user);
+    });
   }
 
 

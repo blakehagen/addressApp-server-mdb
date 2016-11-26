@@ -8,7 +8,8 @@ module.exports = app => {
     .put(userCtrl.sendInvitations);
 
   app.route('/api/v1/user/:id/connections')
-    .get(userCtrl.getUserConnections);
+    .get(userCtrl.getUserConnections)
+    .put(userCtrl.saveNewConnections);
 
   app.route('/api/v1/users')
     .get(userCtrl.getAllUsers);
