@@ -16,4 +16,7 @@ module.exports = app => {
 
   app.route('/api/v1/user/:id/address')
     .put(userCtrl.updateUserAddress);
+
+  app.route('/api/v1/user/:id/remove/:inviteId')
+    .put(userCtrl.removeRequest);
 };

@@ -21,9 +21,9 @@ module.exports = {
   },
 
   // GET ALL USERS FOR SEARCH
-  getAllUsers: function (req, res) {
+  getAllUsers: (req, res) => {
     // TODO add middleware to check for verified user via authToken //
-    User.find().select('firstName lastName pendingInvitationsSent pendingInvitationsReceived connections').exec(function (err, users) {
+    User.find().select('firstName lastName pendingInvitationsSent pendingInvitationsReceived connections').exec((err, users) => {
       if (err) {
         return res.status(500);
       }
@@ -103,13 +103,13 @@ module.exports = {
     })
   },
 
-  saveNewConnections(req, res){
+  saveNewConnections: (req, res) => {
     // TODO add middleware to check for verified user via authToken //
     // if (!req.headers.authorization) {
     //   return res.status(401).send('Unauthorized');
     // }
 
-    let userId    = req.params.id;
+    let userId         = req.params.id;
     let newConnections = req.body;
 
     // SAVE NEW CONNECTIONS TO USER AND REMOVE FROM PENDING //
@@ -136,14 +136,45 @@ module.exports = {
       });
     });
 
-    // SEND BACK UPDATED USER THAT ACCEPTED INVITES //
+    // SEND BACK SUCCESS //
     User.findById(userId).exec((error, user) => {
       if (error) {
         return res.status(500).json(error);
       }
-      return res.status(200).json(user);
+      return res.status(200).json('Success');
+    });
+  },
+
+  removeRequest: (req, res) => {
+    // TODO add middleware to check for verified user via authToken //
+    // if (!req.headers.authorization) {
+    //   return res.status(401).send('Unauthorized');
+    // }
+
+    let userId         = req.params.id;
+    let inviteToDelete = req.params.inviteId;
+
+    User.findByIdAndUpdate(req.params.id,
+      {$pull: {'pendingInvitationsSent': inviteToDelete}}, (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+      });
+
+    User.findByIdAndUpdate(inviteToDelete,
+      {$pull: {'pendingInvitationsReceived': userId}}, (err) => {
+        if (err) {
+          return res.status(500).send(err);
+        }
+      });
+
+    // SEND BACK SUCCESS //
+    User.findById(userId).exec((error, user) => {
+      if (error) {
+        return res.status(500).json(error);
+      }
+      return res.status(200).json('Deleted Request');
     });
   }
-
 
 };
