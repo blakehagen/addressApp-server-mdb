@@ -1,5 +1,6 @@
 'use strict';
 const _    = require('lodash');
+const rp   = require('request-promise');
 const User = require('./user.server.model');
 
 module.exports = {
@@ -175,6 +176,46 @@ module.exports = {
       }
       return res.status(200).json('Deleted Request');
     });
+  },
+
+  getCoordinates: (req, res) => {
+    let address        = req.body;
+    let addressString  = `${address.address1} ${address.city}, ${address.state} ${address.postal_code}`;
+    let encodedAddress = encodeURI(addressString);
+
+    let geocodeKey = '&key=AIzaSyA2hB-NTFBYZag4BrGrpnANlH-OUbrJIQM';
+    let baseUrl    = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+
+    let options = {
+      uri: `${baseUrl}${encodedAddress}${geocodeKey}`,
+      json: true
+    };
+
+    rp(options)
+      .then((mapData) => {
+
+        // console.log('mapData', mapData);
+        if (mapData.status === 'ZERO_RESULTS') {
+          return res.status(200).send('Coordinates Not Found!');
+        }
+
+        let coordinates = {
+          latitude: _.get(mapData.results[0], 'geometry.location.lat', null),
+          longitude: _.get(mapData.results[0], 'geometry.location.lng', null)
+        };
+
+        // console.log('coordinates ==> ', coordinates);
+
+        User.findByIdAndUpdate(req.params.id, {$set: {'coordinates': coordinates}}, {new: true}, (err) => {
+          if (err) {
+            return res.status(500).send(err);
+          }
+          return res.status(200).send('Coordinates Saved!');
+        })
+      })
+      .catch(function (err) {
+        return res.status(500).send(err);
+      });
   }
 
 };

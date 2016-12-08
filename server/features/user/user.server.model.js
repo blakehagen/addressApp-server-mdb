@@ -20,6 +20,10 @@ const UserSchema = new Schema({
     postal_code: {type: String, default: null},
     country: {type: String, default: null}
   },
+  coordinates: {
+    latitude: {type: Number, default: null},
+    longitude: {type: Number, default: null}
+  },
   pendingInvitationsSent: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   pendingInvitationsReceived: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }],
   connections: [{ type: Schema.Types.ObjectId, ref: 'User', unique: true }]
