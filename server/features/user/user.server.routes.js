@@ -1,25 +1,26 @@
 'use strict';
 const userCtrl = require('./user.server.controller');
+const middleware = require('../../middlware/middleware');
 
 module.exports = app => {
 
   app.route('/api/v1/user/:id')
-    .get(userCtrl.getUser)
-    .put(userCtrl.sendInvitations);
+    .get(middleware.isAuthenticated, userCtrl.getUser)
+    .put(middleware.isAuthenticated, userCtrl.sendInvitations);
 
   app.route('/api/v1/user/:id/connections')
-    .get(userCtrl.getUserConnections)
-    .put(userCtrl.saveNewConnections);
+    .get(middleware.isAuthenticated, userCtrl.getUserConnections)
+    .put(middleware.isAuthenticated, userCtrl.saveNewConnections);
 
   app.route('/api/v1/users')
-    .get(userCtrl.getAllUsers);
+    .get(middleware.isAuthenticated, userCtrl.getAllUsers);
 
   app.route('/api/v1/user/:id/address')
-    .put(userCtrl.updateUserAddress);
+    .put(middleware.isAuthenticated, userCtrl.updateUserAddress);
 
   app.route('/api/v1/user/:id/coordinates')
-    .put(userCtrl.getCoordinates);
+    .put(middleware.isAuthenticated, userCtrl.getCoordinates);
 
   app.route('/api/v1/user/:id/remove/:inviteId')
-    .put(userCtrl.removeRequest);
+    .put(middleware.isAuthenticated, userCtrl.removeRequest);
 };

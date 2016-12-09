@@ -1,8 +1,8 @@
 'use strict';
 
-const User = require('../user/user.server.model');
-const jwt  = require('jwt-simple');
-// const secret = require('../../config/secret');
+const User   = require('../user/user.server.model');
+const jwt    = require('jwt-simple');
+const secret = require('../../config/secret');
 
 module.exports = {
 
@@ -15,7 +15,7 @@ module.exports = {
       }
 
       if (user) {
-       return res.status(400).json({message: 'E-mail already in use'});
+        return res.status(400).json({message: 'E-mail already in use'});
       } else {
 
         let newUser = new User();
@@ -31,7 +31,10 @@ module.exports = {
             return err;
           }
 
-          let token = jwt.encode({userId: newUser._id, email: newUser.email}, process.env.JWT_SECRET || 'test');
+          let token = jwt.encode({
+            userId: newUser._id,
+            email: newUser.email
+          }, process.env.JWT_SECRET || secret.tokenSecret);
 
           return res.status(200).json({user: newUser, message: 'Registration Success', token: token});
         });
@@ -51,7 +54,7 @@ module.exports = {
         return res.status(400).json({message: 'Invalid password'});
       } else {
 
-        let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || 'test');
+        let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || secret.tokenSecret);
 
         return res.status(200).json({user: user, message: 'Login Success', token: token})
       }

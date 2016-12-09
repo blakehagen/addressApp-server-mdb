@@ -8,11 +8,6 @@ module.exports = {
   // GET ONE USER BY ID //
   getUser: (req, res) => {
 
-    // TODO add middleware to check for verified user via authToken //
-    if (!req.headers.authorization) {
-      return res.status(401).send('Unauthorized');
-    }
-
     User.findById(req.params.id).select('-password -userCreated -userCreated_readable').exec((error, user) => {
       if (error) {
         return res.status(500).json(error);
@@ -23,7 +18,6 @@ module.exports = {
 
   // GET ALL USERS FOR SEARCH
   getAllUsers: (req, res) => {
-    // TODO add middleware to check for verified user via authToken //
     User.find().select('firstName lastName pendingInvitationsSent pendingInvitationsReceived connections').exec((err, users) => {
       if (err) {
         return res.status(500);
@@ -34,11 +28,6 @@ module.exports = {
 
   // UPDATE USER ADDRESS //
   updateUserAddress: (req, res) => {
-    // TODO add middleware to check for verified user via authToken //
-    if (!req.headers.authorization) {
-      return res.status(401).send('Unauthorized');
-    }
-
     User.findByIdAndUpdate(req.params.id, {$set: {'address': req.body}}, {new: true}, (err) => {
       if (err) {
         return res.status(500).send(err);
@@ -49,11 +38,6 @@ module.exports = {
 
   // SAVE INVITES TO SENDER AND SENDEES //
   sendInvitations: (req, res) => {
-    // TODO add middleware to check for verified user via authToken //
-    // if (!req.headers.authorization) {
-    //   return res.status(401).send('Unauthorized');
-    // }
-
     let senderId    = req.params.id;
     let invitations = req.body;
 
@@ -90,12 +74,6 @@ module.exports = {
 
   // GET ALL CONNECTIONS AND PENDING CONNECTIONS FOR 1 USER //
   getUserConnections: (req, res) => {
-
-    // TODO add middleware to check for verified user via authToken //
-    // if (!req.headers.authorization) {
-    //   return res.status(401).send('Unauthorized');
-    // }
-
     User.findById(req.params.id).select('pendingInvitationsSent pendingInvitationsReceived connections').populate('pendingInvitationsSent', 'firstName lastName email').populate('pendingInvitationsReceived', 'firstName lastName email').populate('connections', 'firstName lastName email address').exec((error, user) => {
       if (error) {
         return res.status(500).json(error);
@@ -105,11 +83,6 @@ module.exports = {
   },
 
   saveNewConnections: (req, res) => {
-    // TODO add middleware to check for verified user via authToken //
-    // if (!req.headers.authorization) {
-    //   return res.status(401).send('Unauthorized');
-    // }
-
     let userId         = req.params.id;
     let newConnections = req.body;
 
@@ -147,11 +120,6 @@ module.exports = {
   },
 
   removeRequest: (req, res) => {
-    // TODO add middleware to check for verified user via authToken //
-    // if (!req.headers.authorization) {
-    //   return res.status(401).send('Unauthorized');
-    // }
-
     let userId         = req.params.id;
     let inviteToDelete = req.params.inviteId;
 
@@ -194,8 +162,7 @@ module.exports = {
     rp(options)
       .then((mapData) => {
 
-        // console.log('mapData', mapData);
-        if (mapData.status === 'ZERO_RESULTS') {
+        if (!_.isEmpty(mapData.results) || mapData.status === 'ZERO_RESULTS') {
           return res.status(200).send('Coordinates Not Found!');
         }
 
@@ -203,8 +170,6 @@ module.exports = {
           latitude: _.get(mapData.results[0], 'geometry.location.lat', null),
           longitude: _.get(mapData.results[0], 'geometry.location.lng', null)
         };
-
-        // console.log('coordinates ==> ', coordinates);
 
         User.findByIdAndUpdate(req.params.id, {$set: {'coordinates': coordinates}}, {new: true}, (err) => {
           if (err) {
