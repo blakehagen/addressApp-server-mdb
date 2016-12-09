@@ -2,7 +2,7 @@
 
 const User   = require('../user/user.server.model');
 const jwt    = require('jwt-simple');
-const secret = require('../../config/secret');
+// const secret = require('../../config/secret');
 
 module.exports = {
 
@@ -34,7 +34,7 @@ module.exports = {
           let token = jwt.encode({
             userId: newUser._id,
             email: newUser.email
-          }, process.env.JWT_SECRET || secret.tokenSecret);
+          }, process.env.JWT_SECRET);
 
           return res.status(200).json({user: newUser, message: 'Registration Success', token: token});
         });
@@ -54,7 +54,7 @@ module.exports = {
         return res.status(400).json({message: 'Invalid password'});
       } else {
 
-        let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET || secret.tokenSecret);
+        let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET);
 
         return res.status(200).json({user: user, message: 'Login Success', token: token})
       }

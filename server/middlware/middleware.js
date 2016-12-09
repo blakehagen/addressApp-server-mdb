@@ -2,7 +2,7 @@
 
 const _      = require('lodash');
 const jwt    = require('jwt-simple');
-const secret = require('../../server/config/secret');
+// const secret = require('../../server/config/secret');
 
 module.exports = {
 
@@ -14,7 +14,7 @@ module.exports = {
 
     let token = _.last(req.headers.authorization.split(' '));
 
-    let decoded = jwt.decode(token, process.env.JWT_SECRET || secret.tokenSecret);
+    let decoded = jwt.decode(token, process.env.JWT_SECRET);
 
     if (!decoded) {
       return res.status(401).send('Unauthorized');
