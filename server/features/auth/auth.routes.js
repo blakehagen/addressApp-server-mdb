@@ -2,7 +2,6 @@
 
 const authCtrl = require('./auth.server.controller');
 const jwt      = require('jwt-simple');
-// const secret   = require('../../config/secret');
 
 module.exports = (app) => {
 
