@@ -58,7 +58,7 @@ module.exports = {
 
         let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET);
 
-        return res.status(200).json({user: user, message: 'Login Success', token: 'token'})
+        return res.status(200).json({user: user, message: 'Login Success', token: token})
       }
     });
   }
