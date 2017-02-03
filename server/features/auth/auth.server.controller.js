@@ -1,7 +1,7 @@
 'use strict';
 
-const User   = require('../user/user.server.model');
-const jwt    = require('jwt-simple');
+const User = require('../user/user.server.model');
+const jwt  = require('jwt-simple');
 // const secret = require('../../config/secret');
 
 module.exports = {
@@ -52,14 +52,13 @@ module.exports = {
       } else if (!user.validPassword(req.body.password, user.password)) {
         return res.status(400).json({message: 'Invalid password'});
       } else {
+        user.password             = undefined;
+        user.userCreated          = undefined;
+        user.userCreated_readable = undefined;
 
         let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET);
 
-        delete user.password;
-        delete user.userCreated;
-        delete user.userCreated_readable;
-
-        return res.status(200).json({user: user, message: 'Login Success', token: token})
+        return res.status(200).json({user: user, message: 'Login Success', token: 'token'})
       }
     });
   }
