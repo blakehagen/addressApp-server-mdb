@@ -15,8 +15,8 @@ module.exports = {
 
     let decoded = jwt.decode(token, process.env.JWT_SECRET);
 
-    if (!decoded) {
-      return res.status(401).send('Unauthorized');
+    if (_.isError(decoded) || !decoded) {
+      return res.status(401).send('Unauthorized Login');
     } else {
       return next();
     }
