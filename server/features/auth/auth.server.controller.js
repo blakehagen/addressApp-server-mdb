@@ -44,14 +44,7 @@ module.exports = {
 
   // LOG IN //
   login: (req, res) => {
-
-    //Thing.findOne().select('name').exec(function (err, doc) {
-    // doc.isSelected('name') // true
-    // doc.isSelected('age')  // false
-  // })
-
-    User.findOne({'email': req.body.email}).select('-password -userCreated -userCreated_readable').exec((err, user)=> {
-
+    User.findOne({'email': req.body.email}, (err, user) => {
       if (err) {
         return res.status(500).json(err);
       } else if (!user) {
@@ -62,24 +55,12 @@ module.exports = {
 
         let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET);
 
+        delete user.password;
+        delete user.userCreated;
+        delete user.userCreated_readable;
+
         return res.status(200).json({user: user, message: 'Login Success', token: token})
       }
     });
-
-
-    // User.findOne({'email': req.body.email}, (err, user) => {
-    //   if (err) {
-    //     return res.status(500).json(err);
-    //   } else if (!user) {
-    //     return res.status(400).json({message: 'Invalid login'});
-    //   } else if (!user.validPassword(req.body.password, user.password)) {
-    //     return res.status(400).json({message: 'Invalid password'});
-    //   } else {
-    //
-    //     let token = jwt.encode({userId: user.id, email: user.email}, process.env.JWT_SECRET);
-    //
-    //     return res.status(200).json({user: user, message: 'Login Success', token: token})
-    //   }
-    // });
   }
 };
