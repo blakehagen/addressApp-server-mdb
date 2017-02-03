@@ -45,7 +45,7 @@ module.exports = {
   // LOG IN //
   login: (req, res) => {
 
-    User.findOne({'email': req.body.email}, (err, user) => {
+    User.findOne({'email': req.body.email}).select('-password -userCreated -userCreated_readable').exec((err, user) => {
       if (err) {
         return res.status(500).json(err);
       } else if (!user) {
