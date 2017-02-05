@@ -17,6 +17,12 @@ module.exports = (app) => {
   app.route('/api/v1/login')
     .post(authCtrl.login);
 
+  // ========== //
+  // VERIFY USER //
+  // ========== //
+  app.route('/api/v1/verify')
+    .get(authCtrl.verifyUser);
+
   // TEST TEST TEST //
   app.get('/api/v1/protected', (req, res) => {
 

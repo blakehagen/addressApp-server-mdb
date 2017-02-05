@@ -1,5 +1,5 @@
 'use strict';
-
+const _    = require('lodash');
 const User = require('../user/user.server.model');
 const jwt  = require('jwt-simple');
 // const secret = require('../../config/secret');
@@ -61,5 +61,20 @@ module.exports = {
         return res.status(200).json({user: user, message: 'Login Success', token: token})
       }
     });
+  },
+
+  verifyUser: (req, res) => {
+    if (!req.headers.authorization) {
+      return res.status(401).send(false);
+    }
+
+    let token   = _.last(req.headers.authorization.split(' '));
+    let decoded = jwt.decode(token, process.env.JWT_SECRET);
+
+    if (_.isError(decoded) || !decoded) {
+      return res.status(401).send(false);
+    } else {
+      return res.status(200).send(true);
+    }
   }
 };
