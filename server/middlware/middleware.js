@@ -2,7 +2,7 @@
 
 const _      = require('lodash');
 const jwt    = require('jwt-simple');
-const secret = require('../config/secret') || null;
+// const secret = require('../config/secret');
 
 module.exports = {
 
