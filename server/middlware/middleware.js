@@ -2,6 +2,7 @@
 
 const _      = require('lodash');
 const jwt    = require('jwt-simple');
+const secret = require('../config/secret') || null;
 
 module.exports = {
 
@@ -13,11 +14,12 @@ module.exports = {
 
     let token = _.last(req.headers.authorization.split(' '));
 
-    let decoded = jwt.decode(token, process.env.JWT_SECRET);
+    let decoded = jwt.decode(token, process.env.JWT_SECRET || _.get(secret, 'tokenSecret'));
 
     if (_.isError(decoded) || !decoded) {
-      return res.status(401).send('Unauthorized Login');
+      return res.status(401).send('Unauthorized');
     } else {
+      console.log('about to hit next!');
       return next();
     }
   }

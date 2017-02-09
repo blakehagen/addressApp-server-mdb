@@ -1,7 +1,9 @@
 'use strict';
 
-const authCtrl = require('./auth.server.controller');
-const jwt      = require('jwt-simple');
+const authCtrl   = require('./auth.server.controller');
+const jwt        = require('jwt-simple');
+const middleware = require('../../middlware/middleware');
+
 
 module.exports = (app) => {
 
@@ -21,7 +23,7 @@ module.exports = (app) => {
   // VERIFY USER //
   // ========== //
   app.route('/api/v1/verify')
-    .get(authCtrl.verifyUser);
+    .get(middleware.isAuthenticated, authCtrl.verifyUser);
 
   // TEST TEST TEST //
   app.get('/api/v1/protected', (req, res) => {
